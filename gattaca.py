@@ -16,23 +16,37 @@ For every position in the string, find the breakdown (in percentage) for each sy
  
 Position: 1 (A: 0%,  C: 0%, G: 100%, T: 0%)
 """
+from __future__ import division
+from collections import Counter
+from itertools import izip_longest
 
-def gattaca(filename):
-	d=[]
-	f=open(filename)
-	for line in f:
-		line.replace("\n", "") # delete all newline characters
-		d.append(list(line)) # turn each line into an array
-	data = map(None,*d) # transpose each row into a column, imputate None where there are no entries
-	linecount = 1 #
-	for j in data: 
-		sum = len(j)*1.0
-		check = [] # initiate new list for comparison
-		for k in j:	
-			if k not in check: 
-				check.append(k) 
-			check.sort() 
-		print "\n*** Position %s ***" %linecount
-		for l in check:	
-			print l,":",(j.count(l)/sum)*100,"%" # return percentages
-		linecount += 1
+def summarize(c):
+	total = sum(v for k, v in c.items() if k is not None)
+	return {k: v / total for k, v in c.items() if k is not None}
+
+def gattaca(d):
+	transpose = izip_longest(*d)
+	counters = [Counter(t) for t in transpose]
+	return [summarize(c) for c in counters]
+
+def gattaca_file(filename):
+	with open(filename) as f:
+		d = [line.strip() for line in f]
+	return gattaca(d)
+
+if __name__ == '__main__':
+	from pprint import pprint
+	data = [
+		"GATAGGAGTAGTGAGT",
+		"GTAGTAGAGTATGATAGTGTA",
+		"GATTAGATGATGATG",
+		"GATATATAGATATATTAGAT",
+		"GATAGATAGT",
+		"GATTAAGATATGATAGTAG",
+		"GATTAGATAGTAGTAGT",
+		"GTATAGATAGTAGTAGTGATGA",
+		"GTAGATGATGATAGTAGTAGT",
+		"GAAGTAGTGATGAGTAG",
+	]
+	g = gattaca(data)
+	pprint(g)
