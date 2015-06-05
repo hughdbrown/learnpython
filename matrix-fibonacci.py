@@ -21,7 +21,7 @@ def fast_fib(n):
     else:
         n -= 1
         x = (bin(n)[2:])[::-1]
-        indexes = [i for i, xx in enumerate(x) if xx == '1']
-        mms = [fibm[i] for i in indexes]
+        indexes = (i for i, xx in enumerate(x) if xx == '1')
+        mms = (fibm[i] for i in indexes)
         fibn = reduce(matrix_mult, mms, identity)
         return fibn[0][0]
