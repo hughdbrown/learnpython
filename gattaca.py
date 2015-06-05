@@ -21,8 +21,9 @@ from collections import Counter
 from itertools import izip_longest
 
 def summarize(c):
-	total = sum(v for k, v in c.items() if k is not None)
-	return {k: v / total for k, v in c.items() if k is not None}
+	remove_none = {k: v for k, v in c.items() if k is not None}
+	total = sum(remove_none.values())
+	return {k: v / total for k, v in remove_none.items()}
 
 def gattaca(d):
 	transpose = izip_longest(*d)
